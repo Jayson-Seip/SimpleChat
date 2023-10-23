@@ -6,6 +6,8 @@ package edu.seg2105.edu.server.backend;
 
 import ocsf.server.*;
 
+import java.io.IOException;
+
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -100,11 +102,35 @@ public class EchoServer extends AbstractServer
     try 
     {
       sv.listen(); //Start listening for connections
+
     } 
     catch (Exception ex) 
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+  }
+
+  /**
+   * Hook method called each time a new client connection is
+   * accepted. The default implementation does nothing.
+   * @param client the connection connected to the client.
+   */
+  @Override
+  protected void clientConnected(ConnectionToClient client) {
+
+      System.out.println("Connected to client "+client);
+  }
+
+  /**
+   * Hook method called each time a client disconnects.
+   * The default implementation does nothing. The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  @Override
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    System.out.println(client + " Disconnected");
   }
 }
 //End of EchoServer class

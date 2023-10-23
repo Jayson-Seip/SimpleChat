@@ -70,6 +70,11 @@ public class ChatClient extends AbstractClient
   {
     try
     {
+      // Check if message starts with # - symbol
+      if(message.startsWith("#")){
+
+
+      }
       sendToServer(message);
     }
     catch(IOException e)
@@ -77,6 +82,29 @@ public class ChatClient extends AbstractClient
       clientUI.display
         ("Could not send message to server.  Terminating client.");
       quit();
+    }
+  }
+
+  /**
+   * Handles commands entered by the user
+   * @param command
+   */
+  private void HandleCommand(String command){
+    // Exits the program
+    if(command.equals("#quit")){
+      quit();
+    }
+    else if(command.equals("#logoff")){
+      try {
+        closeConnection();
+      } catch (IOException e) {
+        connectionClosed();
+      }
+    }
+    else if(command.equals("#login")){
+      if(!isConnected()){
+
+      }
     }
   }
   
@@ -118,6 +146,7 @@ public class ChatClient extends AbstractClient
   @Override
   protected void connectionClosed() {
     clientUI.display("Connection Closed");
+
   }
 }
 
