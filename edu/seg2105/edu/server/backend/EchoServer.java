@@ -4,6 +4,7 @@ package edu.seg2105.edu.server.backend;
 // license found at www.lloseng.com 
 
 
+import edu.seg2105.client.common.ChatIF;
 import ocsf.server.*;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port)
   {
     super(port);
   }
@@ -52,6 +53,48 @@ public class EchoServer extends AbstractServer
   {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
+  }
+
+  /**
+   *
+   * @param msg
+   */
+  public void handleMessageFromServerUI(String msg){
+    if(msg.startsWith("#")){
+
+    }
+    this.sendToAllClients("SERVER MSG> " + msg);
+  }
+
+  private void handleCommand(String userCommand){
+    String[] task = userCommand.split(" ");
+    String command = task[0];
+
+    if(command.equals("#quit")){
+      sendToAllClients("Server has shutdown");
+      System.exit(0);
+    }
+    else if(command.equals("#stop")){
+      serverStopped();
+    }
+    else if(command.equals("#close")){
+      try{
+        close();
+      }
+      catch (IOException e) {}
+    }
+    else if(command.equals("#setport")){
+      try{
+        int port = Integer.parseInt(task[1]);
+      }catch(NumberFormatException nf){
+        setPort(DEFAULT_PORT);
+      }catch (ArrayIndexOutOfBoundsException e){
+        setPort(DEFAULT_PORT);
+      }
+    }
+    else if(command.equals("#getport")){
+      System.out.println(getPort());
+    }
   }
     
   /**
