@@ -61,7 +61,7 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromServerUI(String msg){
     if(msg.startsWith("#")){
-
+        handleCommand(msg);
     }
     this.sendToAllClients("SERVER MSG> " + msg);
   }
