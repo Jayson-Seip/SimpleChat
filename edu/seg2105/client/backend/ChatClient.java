@@ -44,7 +44,7 @@ public class ChatClient extends AbstractClient
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    //openConnection();
   }
 
   
@@ -72,10 +72,15 @@ public class ChatClient extends AbstractClient
     {
       // Check if message starts with # - symbol
       if(message.startsWith("#")){
-
-
+        handleCommand(message);
       }
-      sendToServer(message);
+      else{
+        sendToServer(message);
+      }
+
+    }
+    catch(IllegalArgumentException il){
+      System.out.println("Invalid command");
     }
     catch(IOException e)
     {
@@ -87,24 +92,79 @@ public class ChatClient extends AbstractClient
 
   /**
    * Handles commands entered by the user
-   * @param command
+   * @param userCommand
    */
-  private void HandleCommand(String command){
+  private void handleCommand(String userCommand) throws IOException{
     // Exits the program
+    String[] task = userCommand.split(" ");
+    String command = task[0];
     if(command.equals("#quit")){
       quit();
     }
+    // User logs out of chat client
     else if(command.equals("#logoff")){
       try {
+        System.out.println("Logging off");
         closeConnection();
       } catch (IOException e) {
         connectionClosed();
       }
     }
+    // allows user to login
     else if(command.equals("#login")){
+      System.out.println("Logging in");
       if(!isConnected()){
+          openConnection();
+      }
+      else{
+        System.out.println("You Are Already Connected to Server");
+      }
+
+    }
+    // allows user to set hostname
+    else if (command.equals("#sethost")) {
+      if(task[1] == null){
+        throw new IllegalArgumentException();
+      }
+      else if(isConnected()){
+        System.out.println("Connect change host name when logged in");
+      }
+      else{
+        setHost(task[1]);
+        System.out.println("New Host Name: "+getHost());
 
       }
+      
+    }
+    else if (command.equals("#setport")) {
+      if(task[1] == null){
+        throw  new IllegalArgumentException();
+      }
+      else if(isConnected()){
+        System.out.println("Connect change port number when logged in");
+      }
+      else{
+        try{
+          int port = Integer.parseInt(task[1]);
+          setPort(port);
+          System.out.println("New port: "+port);
+        }
+        // Throws exception if port is not an integer type
+        catch (NumberFormatException nf){
+          System.out.println("Invalid port");
+        }
+      }
+      
+    }
+    else if (command.equals("#gethost")) {
+      System.out.println("Host name "+getHost());
+
+    }
+    else if(command.equals("#getport")){
+      System.out.println("Port number: "+getPort());
+    }
+    else{
+      throw new IllegalArgumentException();
     }
   }
   
