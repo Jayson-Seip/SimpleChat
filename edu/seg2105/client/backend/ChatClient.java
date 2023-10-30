@@ -107,7 +107,7 @@ public class ChatClient extends AbstractClient
         System.out.println("Logging off");
         closeConnection();
       } catch (IOException e) {
-        connectionClosed();
+        //connectionClosed();
       }
     }
     // allows user to login

@@ -130,6 +130,7 @@ public class ClientConsole implements ChatIF
     {
       host = "localhost";
       port = DEFAULT_PORT;
+
     }
     catch(NumberFormatException ne) {
       port = DEFAULT_PORT;

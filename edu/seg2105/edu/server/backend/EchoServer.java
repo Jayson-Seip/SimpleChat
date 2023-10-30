@@ -95,6 +95,14 @@ public class EchoServer extends AbstractServer
     else if(command.equals("#getport")){
       System.out.println(getPort());
     }
+    else if(command.equals("#start")){
+      try{
+        listen();
+      }catch (IOException e){
+        System.out.println("Server error");
+      }
+
+    }
   }
     
   /**
