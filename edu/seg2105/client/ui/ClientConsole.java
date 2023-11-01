@@ -50,11 +50,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String userLogin)
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(host, port, this,userLogin);
       
       
     } 
@@ -104,7 +104,7 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    System.out.println(message);
   }
 
   
@@ -118,25 +118,40 @@ public class ClientConsole implements ChatIF
   public static void main(String[] args) 
   {
     String host = "";
+    String userLogin = "";
     int port = 0;
 
 
     try
     {
-      host = args[0];
-      port = Integer.parseInt(args[1]);
+      userLogin = args[0];
+      host = args[1];
+      port = Integer.parseInt(args[2]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      host = "localhost";
-      port = DEFAULT_PORT;
-
+      // If user login id is not given
+      if(args.length == 0){
+        System.exit(0);
+      }
+      else if(args.length == 1){
+        System.out.println("here");
+        userLogin =args[0];
+        host = "localhost";
+        port = DEFAULT_PORT;
+      }
+      else if(args.length ==2){
+        userLogin =args[0];
+        host = "localhost";
+        port = DEFAULT_PORT;
+      }
     }
     catch(NumberFormatException ne) {
       port = DEFAULT_PORT;
 
     }
-    ClientConsole chat= new ClientConsole(host, port);
+    System.out.println(userLogin);
+    ClientConsole chat= new ClientConsole(host, port,userLogin);
     chat.accept();  //Wait for console data
 
   }

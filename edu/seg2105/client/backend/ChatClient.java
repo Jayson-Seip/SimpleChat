@@ -26,7 +26,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+  String userLogin;
 
   
   //Constructors ****************************************************
@@ -39,17 +40,33 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, ChatIF clientUI,String userLogin)
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.userLogin = userLogin;
     //openConnection();
   }
 
   
   //Instance methods ************************************************
-    
+  /**
+   * Hook method called after a connection has been established. The default
+   * implementation does nothing. It may be overridden by subclasses to do
+   * anything they wish.
+   */
+  protected void connectionEstablished() {
+    try{
+      sendToServer("#login "+userLogin);
+      System.out.println("Established");
+
+
+    }catch (Exception e){
+
+    }
+
+  }
   /**
    * This method handles all data that comes in from the server.
    *
@@ -113,12 +130,17 @@ public class ChatClient extends AbstractClient
     // allows user to login
     else if(command.equals("#login")){
       System.out.println("Logging in");
-      if(!isConnected()){
+      try{
+        if(!isConnected()){
           openConnection();
+        }
+        else{
+          System.out.println("You Are Already Connected to Server");
+        }
+      } catch(IndexOutOfBoundsException e){
+        throw new IndexOutOfBoundsException("No login information connected");
       }
-      else{
-        System.out.println("You Are Already Connected to Server");
-      }
+
 
     }
     // allows user to set hostname

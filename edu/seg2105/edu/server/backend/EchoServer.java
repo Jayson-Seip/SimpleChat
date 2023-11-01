@@ -51,8 +51,19 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String command = msg.toString();
+    System.out.println("Message received: " + msg + " from " + client.getInfo("userLogin"));
+
+    if(command.startsWith("#login")){
+      String[] information = command.split(" ");
+      client.setInfo("userLogin",information[1]);
+      System.out.println(client.getInfo("userLogin")+" has logged on");
+
+
+    }else{
+      this.sendToAllClients(client.getInfo("userLogin")+"> "+msg);
+    }
+
   }
 
   /**
@@ -86,6 +97,7 @@ public class EchoServer extends AbstractServer
     else if(command.equals("#setport")){
       try{
         int port = Integer.parseInt(task[1]);
+        setPort(port);
       }catch(NumberFormatException nf){
         setPort(DEFAULT_PORT);
       }catch (ArrayIndexOutOfBoundsException e){
@@ -101,7 +113,6 @@ public class EchoServer extends AbstractServer
       }catch (IOException e){
         System.out.println("Server error");
       }
-
     }
   }
     
@@ -134,7 +145,7 @@ public class EchoServer extends AbstractServer
    */
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("Connected to client "+client);
+    System.out.println("A new client has connected to the server");
   }
 
   /**
@@ -159,7 +170,7 @@ public class EchoServer extends AbstractServer
    * @param Throwable the exception thrown.
    */
   synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
-    System.out.println(client + " Disconnected");
+    System.out.println(client.getInfo("userLogin") + "has logged off");
   }
 
   /**
