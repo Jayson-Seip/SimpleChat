@@ -46,7 +46,6 @@ public class ChatClient extends AbstractClient
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     this.userLogin = userLogin;
-    //openConnection();
   }
 
   
@@ -59,11 +58,8 @@ public class ChatClient extends AbstractClient
   protected void connectionEstablished() {
     try{
       sendToServer("#login "+userLogin);
-      System.out.println("Established");
-
 
     }catch (Exception e){
-
     }
 
   }
@@ -137,8 +133,9 @@ public class ChatClient extends AbstractClient
         else{
           System.out.println("You Are Already Connected to Server");
         }
-      } catch(IndexOutOfBoundsException e){
-        throw new IndexOutOfBoundsException("No login information connected");
+      } catch (IOException e){
+        System.out.println("ERROR - Can't setup connection! Terminating client.");
+        quit();
       }
 
 

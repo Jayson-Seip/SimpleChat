@@ -55,6 +55,14 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client.getInfo("userLogin"));
 
     if(command.startsWith("#login")){
+      if(client.getInfo("userLogin") != null){
+        try{
+          client.close();
+        }catch(IOException e){
+          //System.out.println();
+        }
+
+      }
       String[] information = command.split(" ");
       client.setInfo("userLogin",information[1]);
       System.out.println(client.getInfo("userLogin")+" has logged on");
@@ -92,7 +100,9 @@ public class EchoServer extends AbstractServer
       try{
         close();
       }
-      catch (IOException e) {}
+      catch (IOException e) {
+
+      }
     }
     else if(command.equals("#setport")){
       try{

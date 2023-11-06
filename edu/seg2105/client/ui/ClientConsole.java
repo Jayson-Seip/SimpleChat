@@ -132,10 +132,10 @@ public class ClientConsole implements ChatIF
     {
       // If user login id is not given
       if(args.length == 0){
+        System.out.println("Login ID not specified");
         System.exit(0);
       }
       else if(args.length == 1){
-        System.out.println("here");
         userLogin =args[0];
         host = "localhost";
         port = DEFAULT_PORT;
@@ -150,7 +150,6 @@ public class ClientConsole implements ChatIF
       port = DEFAULT_PORT;
 
     }
-    System.out.println(userLogin);
     ClientConsole chat= new ClientConsole(host, port,userLogin);
     chat.accept();  //Wait for console data
 
