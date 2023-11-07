@@ -55,11 +55,11 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client.getInfo("userLogin"));
 
     if(command.startsWith("#login")){
+      // Sets up user if it is the first time connecting to the server
       if(client.getInfo("userLogin") != null){
         try{
           client.close();
         }catch(IOException e){
-          //System.out.println();
         }
 
       }
@@ -68,14 +68,16 @@ public class EchoServer extends AbstractServer
       System.out.println(client.getInfo("userLogin")+" has logged on");
 
 
-    }else{
+    }
+    else{
+      // Sends message if login is already established
       this.sendToAllClients(client.getInfo("userLogin")+"> "+msg);
     }
 
   }
 
   /**
-   *
+   *Gets the message from the server UI
    * @param msg
    */
   public void handleMessageFromServerUI(String msg){
@@ -85,17 +87,24 @@ public class EchoServer extends AbstractServer
     this.sendToAllClients("SERVER MSG> " + msg);
   }
 
+  /**
+   *Handles the commands from the server UI
+   * @param userCommand
+   */
   private void handleCommand(String userCommand){
     String[] task = userCommand.split(" ");
     String command = task[0];
 
+    // quits out of the program
     if(command.equals("#quit")){
       sendToAllClients("Server has shutdown");
       System.exit(0);
     }
+    // Stops listening for connections but existing clients
     else if(command.equals("#stop")){
       serverStopped();
     }
+    // Closes the server and disconnects all connects
     else if(command.equals("#close")){
       try{
         close();
@@ -104,19 +113,26 @@ public class EchoServer extends AbstractServer
 
       }
     }
+    // Sets the port
     else if(command.equals("#setport")){
       try{
         int port = Integer.parseInt(task[1]);
         setPort(port);
-      }catch(NumberFormatException nf){
+
+      }
+      // Sets port to 5555 if port is entered incorrectly
+      catch(NumberFormatException nf){
         setPort(DEFAULT_PORT);
       }catch (ArrayIndexOutOfBoundsException e){
         setPort(DEFAULT_PORT);
       }
     }
+    //Returns the port of the server
     else if(command.equals("#getport")){
       System.out.println(getPort());
     }
+
+    // Starts the server if it is closed or stopped
     else if(command.equals("#start")){
       try{
         listen();

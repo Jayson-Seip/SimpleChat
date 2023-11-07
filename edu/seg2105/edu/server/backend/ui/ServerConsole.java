@@ -1,6 +1,7 @@
-package edu.seg2105.edu.server.backend;
+package edu.seg2105.edu.server.backend.ui;
 
 import edu.seg2105.client.common.ChatIF;
+import edu.seg2105.edu.server.backend.EchoServer;
 
 import java.util.Scanner;
 
@@ -22,11 +23,19 @@ public class ServerConsole implements ChatIF {
 
 
     @Override
+    /**
+     * Displays message
+     * @param String
+     */
     public void display(String message)
     {
         System.out.println("SERVER MSG> " + message);
     }
 
+    /**
+     * This method waits for input from the console.  Once it is
+     * received, it sends it to the echo server.
+     */
     public void accept(){
         String message;
 
