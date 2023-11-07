@@ -146,7 +146,7 @@ public class ChatClient extends AbstractClient
         throw new IllegalArgumentException();
       }
       else if(isConnected()){
-        System.out.println("Connect change host name when logged in");
+        System.out.println("Cannot change host name when logged in");
       }
       else{
         setHost(task[1]);
@@ -155,12 +155,13 @@ public class ChatClient extends AbstractClient
       }
       
     }
+    // allows user to set port for client to connect to on server
     else if (command.equals("#setport")) {
       if(task[1] == null){
         throw  new IllegalArgumentException();
       }
       else if(isConnected()){
-        System.out.println("Connect change port number when logged in");
+        System.out.println("Cannot change port number when logged in");
       }
       else{
         try{
@@ -175,10 +176,12 @@ public class ChatClient extends AbstractClient
       }
       
     }
+    //Returns host name
     else if (command.equals("#gethost")) {
       System.out.println("Host name "+getHost());
 
     }
+    //Returns port client should connect to for server
     else if(command.equals("#getport")){
       System.out.println("Port number: "+getPort());
     }
