@@ -52,27 +52,29 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     String command = msg.toString();
-    System.out.println("Message received: " + msg + " from " + client.getInfo("userLogin"));
+    System.out.println("Message received: " + msg + " from " + client.getInfo("login id"));
 
-    if(command.startsWith("#login")){
+    if(command.startsWith("#login")) {
       // Sets up user if it is the first time connecting to the server
-      if(client.getInfo("userLogin") != null){
-        try{
+      if (client.getInfo("login id") != null) {
+        try {
           client.close();
-        }catch(IOException e){
+        } catch (IOException e) {
         }
 
       }
       String[] information = command.split(" ");
-      client.setInfo("userLogin",information[1]);
-      System.out.println(client.getInfo("userLogin")+" has logged on");
+      client.setInfo("login id", information[1]);
+      System.out.println(client.getInfo("login id") + " has logged on");
+      this.sendToAllClients(client.getInfo("login id") + " has logged on");
 
 
-    }
-    else{
+    }else{
       // Sends message if login is already established
-      this.sendToAllClients(client.getInfo("userLogin")+"> "+msg);
+      this.sendToAllClients(client.getInfo("login id")+"> "+msg);
     }
+
+
 
   }
 
@@ -97,10 +99,9 @@ public class EchoServer extends AbstractServer
 
     // quits out of the program
     if(command.equals("#quit")){
-      sendToAllClients("Server has shutdown");
       System.exit(0);
     }
-    // Stops listening for connections but existing clients
+    // Stops listening for connections but existing clients are still connected
     else if(command.equals("#stop")){
       serverStopped();
     }
@@ -116,6 +117,9 @@ public class EchoServer extends AbstractServer
     // Sets the port
     else if(command.equals("#setport")){
       try{
+        if(isListening()){
+          throw new IllegalArgumentException();
+        }
         int port = Integer.parseInt(task[1]);
         setPort(port);
 
@@ -126,10 +130,13 @@ public class EchoServer extends AbstractServer
       }catch (ArrayIndexOutOfBoundsException e){
         setPort(DEFAULT_PORT);
       }
+      catch (IllegalArgumentException e){
+        System.out.println("Cannot change port while server iis running");
+      }
     }
     //Returns the port of the server
     else if(command.equals("#getport")){
-      System.out.println(getPort());
+      System.out.println("Server port: "+getPort());
     }
 
     // Starts the server if it is closed or stopped
@@ -158,8 +165,8 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
-    System.out.println
-      ("Server has stopped listening for connections.");
+    stopListening();
+
   }
   
   
@@ -183,7 +190,7 @@ public class EchoServer extends AbstractServer
    */
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-    //System.out.println(client + " Disconnected");
+    System.out.println(client.getInfo("login id") + " Disconnected");
   }
 
   /**
@@ -196,7 +203,7 @@ public class EchoServer extends AbstractServer
    * @param Throwable the exception thrown.
    */
   synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
-    System.out.println(client.getInfo("userLogin") + "has logged off");
+    System.out.println(client.getInfo("login id") + " has logged off");
   }
 
   /**

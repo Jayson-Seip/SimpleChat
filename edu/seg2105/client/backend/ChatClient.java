@@ -57,6 +57,7 @@ public class ChatClient extends AbstractClient
    */
   protected void connectionEstablished() {
     try{
+      // Sends the login ID to the server once the client connects
       sendToServer("#login "+userLogin);
 
     }catch (Exception e){
@@ -120,7 +121,6 @@ public class ChatClient extends AbstractClient
         System.out.println("Logging off");
         closeConnection();
       } catch (IOException e) {
-        //connectionClosed();
       }
     }
     // allows user to login
@@ -157,7 +157,9 @@ public class ChatClient extends AbstractClient
     }
     // allows user to set port for client to connect to on server
     else if (command.equals("#setport")) {
+      // If no port is entered
       if(task[1] == null){
+        System.out.println("No port was entered");
         throw  new IllegalArgumentException();
       }
       else if(isConnected()){
